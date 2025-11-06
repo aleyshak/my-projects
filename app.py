@@ -1,23 +1,12 @@
-from flask import Flask
+from flask import Flask, request, redirect, render_template
+
 expenses = [] #This will hold expense data as dictionaries
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    page = "<h1>Expense Tracker</h1>" # Title of the page
-    page += """
-    <form action='/add' method='POST'>
-        <input name='amount' placeholder='Amount' required>
-        <input name='description' placeholder='Description' required>
-        <button type='submit'>Add Expense</button>
-    </form>
-    """ # Form to add new expenses
-    page += "<ul>"
-    for exp in expenses:
-        page += f"<li>${exp['amount']}: {exp['description']}</li>"
-    page += "</ul>"
-    return page
+    return render_template('home.html', expenses=expenses) # Render the home page with the list of expenses
 
 from flask import request, redirect
 
