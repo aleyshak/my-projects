@@ -12,12 +12,25 @@ def home():
         <input name='description' placeholder='Description' required>
         <button type='submit'>Add Expense</button>
     </form>
-    """
+    """ # Form to add new expenses
     page += "<ul>"
     for exp in expenses:
         page += f"<li>${exp['amount']}: {exp['description']}</li>"
     page += "</ul>"
     return page
+
+from flask import request, redirect
+
+@app.route('/add', methods=['POST']) # Route to add a new expense
+def add_expense():
+    amount = request.form['amount']
+    description = request.form['description']
+    expenses.append({
+        'amount': amount,
+        'description': description
+    })
+    return redirect('/')
+
     return "Hello, Expense Tracker!"
 
 if __name__ == '__main__':
