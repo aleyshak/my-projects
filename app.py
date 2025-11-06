@@ -1,8 +1,7 @@
 from flask import Flask, request, redirect, render_template
 
-expenses = [] #This will hold expense data as dictionaries
-
 app = Flask(__name__)
+expenses = [] #This will hold expense data as dictionaries
 
 @app.route('/')
 def home():
@@ -19,8 +18,6 @@ def add_expense():
         'description': description
     })
     return redirect('/')
-
-    return "Hello, Expense Tracker!"
 
 if __name__ == '__main__':
     app.run(debug=True)
