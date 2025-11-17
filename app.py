@@ -23,24 +23,31 @@ init_db()
 
 @app.route('/')
 def home():
-    # Load expenses from database
+    cat_filter = request.args.get('cat_filter', '')
     conn = sqlite3.connect('expenses.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT id, description, amount, date FROM expenses ORDER BY date DESC')
+    if cat_filter:
+        cursor.execute(
+            'SELECT id, description, amount, date, category FROM expenses WHERE category = ? ORDER BY date DESC',
+            (cat_filter,))
+    else:
+        cursor.execute(
+            'SELECT id, description, amount, date, category FROM expenses ORDER BY date DESC')
     rows = cursor.fetchall()
     conn.close()
-    
-    # Convert to list of dictionaries
+
     expenses = []
     for row in rows:
         expenses.append({
             'id': row[0],
             'description': row[1],
             'amount': row[2],
-            'date': row[3]
+            'date': row[3],
+            'category': row[4]
         })
 
-    return render_template('home.html', expenses=expenses) # Render the home page with the list of expenses
+    return render_template('home.html', expenses=expenses)
+ # Render the home page with the list of expenses
 
 from flask import request, redirect
 
