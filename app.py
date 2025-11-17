@@ -45,8 +45,11 @@ def home():
             'date': row[3],
             'category': row[4]
         })
+        total = sum(float(exp['amount']) for exp in expenses)
 
-    return render_template('home.html', expenses=expenses)
+
+    return render_template('home.html', expenses=expenses, total=total)
+
  # Render the home page with the list of expenses
 
 from flask import request, redirect
