@@ -21,6 +21,7 @@ def init_db():
 
 init_db()
 
+
 @app.route('/')
 def home():
     cat_filter = request.args.get('cat_filter', '')
@@ -36,6 +37,8 @@ def home():
     rows = cursor.fetchall()
     conn.close()
 
+    from collections import defaultdict # Import defaultdict for easier category total calculations
+
     expenses = []
     for row in rows:
         expenses.append({
@@ -45,10 +48,17 @@ def home():
             'date': row[3],
             'category': row[4]
         })
-        total = sum(float(exp['amount']) for exp in expenses)
 
+    # Calculate per-category totals
+    category_totals = defaultdict(float)
+    for exp in expenses:
+        category_totals[exp['category']] += float(exp['amount'])
 
-    return render_template('home.html', expenses=expenses, total=total)
+    # Prepare for chart (labels and data arrays)
+    chart_labels = list(category_totals.keys())
+    chart_data = list(category_totals.values())
+
+    return render_template('home.html', expenses=expenses, category_totals=category_totals, chart_labels=chart_labels, chart_data=chart_data)
 
  # Render the home page with the list of expenses
 
